@@ -29,6 +29,16 @@ function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { /* storage unavailable */ }
 }
 
+// Ask the browser not to evict our storage (e.g. under disk pressure, or
+// Safari's 7-day limit). Installed PWAs are usually granted this silently.
+async function requestPersistentStorage() {
+  try {
+    if (navigator.storage?.persist && !(await navigator.storage.persisted())) {
+      await navigator.storage.persist();
+    }
+  } catch { /* unsupported */ }
+}
+
 function load() {
   try {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -400,6 +410,7 @@ function registerServiceWorker() {
 buildBoard();
 bindEvents();
 registerServiceWorker();
+requestPersistentStorage();
 
 state = load();
 if (state) {
