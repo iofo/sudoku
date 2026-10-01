@@ -36,16 +36,28 @@ python3 -m http.server -d public 8000
 
 ## Docker
 
+A GitHub Actions workflow (`.github/workflows/docker.yml`) builds the image for `linux/amd64` and `linux/arm64`, and publishes it to the GitHub Container Registry:
+
+- Each push to `main` publishes `latest` and `sha-<commit>`.
+- Each `v*` tag (for example `v1.2.0`) also publishes `1.2.0` and `1.2`.
+- Pull requests are built but not published.
+
 ```sh
-docker build -t sudoku-pwa .
-docker run -d -p 8080:8080 sudoku-pwa
+docker run -d -p 8080:8080 ghcr.io/iofo/sudoku:latest
 ```
 
 Or with Compose:
 
 ```sh
 cp compose.example.yaml compose.yaml
-docker compose up -d --build
+docker compose up -d
+```
+
+To build the image yourself instead:
+
+```sh
+docker build -t sudoku-pwa .
+docker run -d -p 8080:8080 sudoku-pwa
 ```
 
 The container runs nginx as a non-root user on port 8080, with a health check at `/healthz`.
