@@ -1,0 +1,22 @@
+# Example compose file. Copy to compose.yaml and adjust as needed:
+#   cp compose.example.yaml compose.yaml && docker compose up -d --build
+#
+# Note: service workers (and so offline play / install) require HTTPS,
+# except on localhost. Put this behind a TLS-terminating reverse proxy
+# (Traefik, Caddy, nginx-proxy, etc.) for real deployments.
+
+services:
+  sudoku:
+    build: .
+    image: sudoku-pwa:latest
+    container_name: sudoku
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

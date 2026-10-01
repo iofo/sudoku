@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#3b5bdb"/>
+  <rect x="96" y="96" width="320" height="320" rx="20" fill="#fff"/>
+  <g stroke="#3b5bdb" stroke-width="10">
+    <line x1="202.7" y1="96" x2="202.7" y2="416"/>
+    <line x1="309.3" y1="96" x2="309.3" y2="416"/>
+    <line x1="96" y1="202.7" x2="416" y2="202.7"/>
+    <line x1="96" y1="309.3" x2="416" y2="309.3"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="76" text-anchor="middle" fill="#1c1e26">
+    <text x="149.3" y="177">5</text>
+    <text x="256" y="284">3</text>
+    <text x="362.7" y="390">9</text>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="76" text-anchor="middle" fill="#3b5bdb">
+    <text x="362.7" y="177">7</text>
+    <text x="149.3" y="390">1</text>
+  </g>
+</svg>

@@ -1,0 +1,57 @@
+# Sudoku
+
+A Sudoku game you can install and play offline, as a progressive web app (PWA). It is written in plain HTML, CSS and JavaScript, with no build step or dependencies. nginx serves it from a Docker container.
+
+## Features
+
+- Puzzles are generated in the browser at four difficulty levels (Easy, Medium, Hard, Expert), and every puzzle has exactly one solution
+- Pencil-mark notes, which are cleared automatically when you place a number
+- Undo, erase and hints
+- The row, column and box of the selected cell are highlighted, along with every cell holding the same number
+- Wrong entries are shown in red and counted, and clashing cells are highlighted
+- A timer that pauses automatically when the tab is hidden
+- Your game is saved in `localStorage`, so you can carry on after closing the app
+- Light and dark themes follow the system setting
+- Works offline through a service worker, and can be installed to the home screen or desktop
+
+### Keyboard shortcuts
+
+| Key | Action |
+| --- | --- |
+| Arrow keys | Move the selection |
+| `1`–`9` | Enter a number (or a note, when notes mode is on) |
+| `Backspace` / `Delete` / `0` | Erase |
+| `N` | Turn notes mode on or off |
+| `H` | Hint |
+| `P` / `Space` | Pause |
+| `Ctrl/Cmd+Z` | Undo |
+
+## Running locally
+
+Serve the `public/` directory with any static file server, for example:
+
+```sh
+python3 -m http.server -d public 8000
+```
+
+## Docker
+
+```sh
+docker build -t sudoku-pwa .
+docker run -d -p 8080:8080 sudoku-pwa
+```
+
+Or with Compose:
+
+```sh
+cp compose.example.yaml compose.yaml
+docker compose up -d --build
+```
+
+The container runs nginx as a non-root user on port 8080, with a health check at `/healthz`.
+
+> **HTTPS is required.** Browsers only allow service workers, and therefore offline play and installing the app, on HTTPS or on `localhost`. For a real deployment, run the container behind a reverse proxy that handles TLS.
+
+## Releasing updates
+
+After changing any file in `public/`, increase `CACHE_VERSION` in `public/sw.js`. Clients then download the new files, and the app shows an "Update available" message.

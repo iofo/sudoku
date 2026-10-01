@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sudoku</title>
+  <meta name="description" content="Play Sudoku offline — a progressive web app.">
+  <meta name="theme-color" content="#3b5bdb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#16181d" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <h1>Sudoku</h1>
+      <div class="meta">
+        <span id="difficulty-label" class="pill"></span>
+        <span id="mistakes" class="stat" title="Mistakes">✗ 0</span>
+        <span id="timer" class="stat" title="Time">0:00</span>
+        <button id="pause" class="icon-btn" aria-label="Pause">⏸</button>
+      </div>
+    </header>
+
+    <section class="board-wrap">
+      <div id="board" class="board" role="grid" aria-label="Sudoku board"></div>
+      <div id="paused-overlay" class="overlay" hidden>
+        <p>Paused</p>
+        <button id="resume" class="btn primary">Resume</button>
+      </div>
+    </section>
+
+    <section class="tools">
+      <button id="undo" class="tool"><span class="ico">↶</span><span>Undo</span></button>
+      <button id="erase" class="tool"><span class="ico">⌫</span><span>Erase</span></button>
+      <button id="notes" class="tool" aria-pressed="false"><span class="ico">✎</span><span>Notes <b id="notes-state">off</b></span></button>
+      <button id="hint" class="tool"><span class="ico">💡</span><span>Hint</span></button>
+    </section>
+
+    <section id="pad" class="pad" aria-label="Number pad"></section>
+
+    <footer class="bottom">
+      <button id="new-game" class="btn primary">New game</button>
+      <button id="restart" class="btn">Restart</button>
+      <button id="install" class="btn" hidden>Install app</button>
+    </footer>
+  </main>
+
+  <dialog id="new-dialog">
+    <form method="dialog">
+      <h2>New game</h2>
+      <div class="choices">
+        <button value="easy" class="btn">Easy</button>
+        <button value="medium" class="btn">Medium</button>
+        <button value="hard" class="btn">Hard</button>
+        <button value="expert" class="btn">Expert</button>
+      </div>
+      <button value="cancel" class="btn subtle">Cancel</button>
+    </form>
+  </dialog>
+
+  <dialog id="win-dialog">
+    <form method="dialog">
+      <h2>Solved! 🎉</h2>
+      <p id="win-text"></p>
+      <button value="new" class="btn primary">New game</button>
+      <button value="close" class="btn subtle">Close</button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
