@@ -1,6 +1,7 @@
 import { generate, PEERS, ROW, COL, BOX, DIFFICULTIES } from './sudoku.js';
 
 const STORAGE_KEY = 'sudoku-state-v1';
+const STATS_KEY = 'sudoku-stats-v1';
 const $ = (sel) => document.querySelector(sel);
 
 const boardEl = $('#board');
@@ -13,6 +14,7 @@ const notesStateEl = $('#notes-state');
 const pausedOverlay = $('#paused-overlay');
 const newDialog = $('#new-dialog');
 const winDialog = $('#win-dialog');
+const statsDialog = $('#stats-dialog');
 const toastEl = $('#toast');
 
 let state = null;
@@ -45,6 +47,39 @@ function load() {
     if (s && Array.isArray(s.puzzle) && s.puzzle.length === 81) return s;
   } catch { /* ignore */ }
   return null;
+}
+
+// ---------- Stats ----------
+// Per difficulty: number of puzzles solved, and the fastest solve without hints.
+
+function loadStats() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STATS_KEY));
+    if (s && typeof s === 'object') return s;
+  } catch { /* ignore */ }
+  return {};
+}
+
+// Records a solve; returns true if it set a new fastest time.
+function recordWin(difficulty, seconds, hints) {
+  const stats = loadStats();
+  const s = stats[difficulty] ?? { solved: 0, best: null };
+  s.solved++;
+  const isBest = hints === 0 && (s.best === null || seconds < s.best);
+  if (isBest) s.best = seconds;
+  stats[difficulty] = s;
+  try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch { /* storage unavailable */ }
+  return isBest;
+}
+
+function showStats() {
+  const stats = loadStats();
+  $('#stats-body').innerHTML = Object.entries(DIFFICULTIES).map(([key, { label }]) => {
+    const s = stats[key];
+    return `<tr><th scope="row">${label}</th><td>${s?.solved ?? 0}</td>` +
+      `<td>${s?.best != null ? formatTime(s.best) : '—'}</td></tr>`;
+  }).join('');
+  statsDialog.showModal();
 }
 
 // ---------- Game lifecycle ----------
@@ -176,6 +211,7 @@ function checkWin() {
   if (state.values.every((v, i) => v === state.solution[i])) {
     state.solved = true;
     selected = -1;
+    const isBest = recordWin(state.difficulty, state.elapsed, state.hints);
     save();
     render();
     const extras = [];
@@ -183,7 +219,8 @@ function checkWin() {
     if (state.hints) extras.push(`${state.hints} hint${state.hints === 1 ? '' : 's'}`);
     $('#win-text').textContent =
       `${DIFFICULTIES[state.difficulty].label} puzzle in ${formatTime(state.elapsed)}` +
-      (extras.length ? ` with ${extras.join(' and ')}.` : ' — flawless!');
+      (extras.length ? ` with ${extras.join(' and ')}.` : ' — flawless!') +
+      (isBest ? ' New fastest time!' : '');
     vibrate([40, 60, 40]);
     setTimeout(() => winDialog.showModal(), 300);
   }
@@ -331,6 +368,7 @@ function bindEvents() {
   $('#resume').addEventListener('click', () => setPaused(false));
   $('#restart').addEventListener('click', restart);
   $('#new-game').addEventListener('click', () => newDialog.showModal());
+  $('#stats').addEventListener('click', showStats);
 
   newDialog.addEventListener('close', () => {
     const v = newDialog.returnValue;
@@ -338,10 +376,11 @@ function bindEvents() {
   });
   winDialog.addEventListener('close', () => {
     if (winDialog.returnValue === 'new') newDialog.showModal();
+    else if (winDialog.returnValue === 'stats') showStats();
   });
 
   document.addEventListener('keydown', (e) => {
-    if (newDialog.open || winDialog.open) return;
+    if (newDialog.open || winDialog.open || statsDialog.open) return;
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); return; }
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 

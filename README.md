@@ -10,6 +10,7 @@ A Sudoku game you can install and play offline, as a progressive web app (PWA). 
 - The row, column and box of the selected cell are highlighted, along with every cell holding the same number
 - Wrong entries are shown in red and counted, and clashing cells are highlighted
 - A timer that pauses automatically when the tab is hidden
+- Stats for each level: how many puzzles you've solved and your fastest time. Only games solved without hints count towards the fastest time
 - Your game is saved in `localStorage`, so you can carry on after closing the app. The app also asks the browser to keep this storage permanently (`navigator.storage.persist()`), so it isn't cleared to free up space
 - Light and dark themes follow the system setting
 - Works offline through a service worker, and can be installed to the home screen or desktop
@@ -33,6 +34,10 @@ Serve the `public/` directory with any static file server, for example:
 ```sh
 python3 -m http.server -d public 8000
 ```
+
+## GitHub Pages
+
+`.github/workflows/pages.yml` publishes the `public/` folder to GitHub Pages whenever something in it changes on `main`. GitHub Pages is free and serves over HTTPS, so offline play and installing work there.
 
 ## Docker
 

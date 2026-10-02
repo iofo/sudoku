@@ -46,6 +46,7 @@
     <footer class="bottom">
       <button id="new-game" class="btn primary">New game</button>
       <button id="restart" class="btn">Restart</button>
+      <button id="stats" class="btn">Stats</button>
       <button id="install" class="btn" hidden>Install app</button>
     </footer>
   </main>
@@ -68,6 +69,19 @@
       <h2>Solved! 🎉</h2>
       <p id="win-text"></p>
       <button value="new" class="btn primary">New game</button>
+      <button value="stats" class="btn">Stats</button>
+      <button value="close" class="btn subtle">Close</button>
+    </form>
+  </dialog>
+
+  <dialog id="stats-dialog">
+    <form method="dialog">
+      <h2>Stats</h2>
+      <table class="stats">
+        <thead><tr><th scope="col">Level</th><th scope="col">Solved</th><th scope="col">Fastest</th></tr></thead>
+        <tbody id="stats-body"></tbody>
+      </table>
+      <p class="note">Fastest times only count games solved without hints.</p>
       <button value="close" class="btn subtle">Close</button>
     </form>
   </dialog>

@@ -242,6 +242,12 @@ dialog::backdrop { background: rgb(0 0 0 / 0.4); }
 dialog h2 { margin: 0 0 16px; text-align: center; }
 dialog form { display: flex; flex-direction: column; gap: 8px; }
 dialog p { text-align: center; margin: 0 0 12px; color: var(--muted); }
+.stats { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.stats th, .stats td { padding: 8px 6px; text-align: right; border-bottom: 1px solid var(--line); }
+.stats th:first-child { text-align: left; }
+.stats thead th { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+.stats tbody tr:last-child th, .stats tbody tr:last-child td { border-bottom: none; }
+dialog p.note { font-size: 0.8rem; margin: 8px 0 4px; }
 .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
 /* Toast */
